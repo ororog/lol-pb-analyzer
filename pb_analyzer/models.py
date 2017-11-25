@@ -4,55 +4,55 @@ from django.db import models
 
 class Match(models.Model):
   def __str__(self):
-    return 'Match (game_id: {})'.format(self.gameId)
-  seasonId = models.IntegerField()
-  queueId = models.IntegerField()
-  gameId = models.IntegerField()
-  gameVersion = models.CharField(max_length=20)
-  platformId = models.CharField(max_length=20)
-  gameMode = models.CharField(max_length=20)
-  mapId = models.IntegerField()
-  gameType = models.CharField(max_length=20)
-  gameDuration = models.IntegerField()
-  gameCreation = models.IntegerField()
+    return 'Match (game_id: {})'.format(self.game_id)
+  season_id = models.IntegerField()
+  queue_id = models.IntegerField()
+  game_id = models.IntegerField()
+  game_version = models.CharField(max_length=20)
+  platform_id = models.CharField(max_length=20)
+  game_mode = models.CharField(max_length=20)
+  map_id = models.IntegerField()
+  game_type = models.CharField(max_length=20)
+  game_duration = models.IntegerField()
+  game_creation = models.IntegerField()
 
 class ParticipantIdentity(models.Model):
   def __str__(self):
     return 'ParticipantIdentity (game_id: {}, participant_id: {})'.format(
-      self.match.gameId, self.participantId
+      self.match.game_id, self.participant_id
     )
   match = models.ForeignKey(Match)
-  participantId = models.IntegerField()
+  participant_id = models.IntegerField()
 
 class Player(models.Model):
   def __str__(self):
     return 'Player (name: {}, account_id: {})'.format(
-      self.summonerName, self.accountId
+      self.summoner_name, self.account_id
     )
-  participantIdentity = models.ForeignKey(ParticipantIdentity)
-  currentPlatformId = models.CharField(max_length=20)
-  summonerName = models.CharField(max_length=100)
-  matchHistoryUri = models.CharField(max_length=100)
-  platformId = models.CharField(max_length=20)
-  currentAccountId = models.IntegerField()
-  profileIcon = models.IntegerField()
-  summonerId = models.IntegerField()
-  accountId = models.IntegerField()
+  participant_identity = models.ForeignKey(ParticipantIdentity)
+  current_platform_id = models.CharField(max_length=20)
+  summoner_name = models.CharField(max_length=100)
+  match_history_uri = models.CharField(max_length=100)
+  platform_id = models.CharField(max_length=20)
+  current_account_id = models.IntegerField()
+  profile_icon = models.IntegerField()
+  summoner_id = models.IntegerField()
+  account_id = models.IntegerField()
 
 class Participant(models.Model):
   def __str__(self):
     return 'Participant (game_id: {}, participant_id: {})'.format(
-      self.match.gameId, self.participantId
+      self.match.game_id, self.participant_id
     )
   match = models.ForeignKey(Match)
-  participantId	= models.IntegerField()
-  teamId = models.IntegerField()
-  championId = models.IntegerField()
+  participant_id = models.IntegerField()
+  team_id = models.IntegerField()
+  champion_id = models.IntegerField()
 
 class ParticipantStats(models.Model):
   def __str__(self):
-    return 'ParticipantStats (participant_id: {}, win: {}'.format(
-      self.participant.participantId, self.win
+    return 'ParticipantStats (participant_id: {}, win: {})'.format(
+      self.participant.participant_id, self.win
     )
   participant = models.ForeignKey(Participant)
   win = models.BooleanField()
@@ -60,9 +60,8 @@ class ParticipantStats(models.Model):
 class ParticipantTimeline(models.Model):
   def __str__(self):
     return 'ParticipantTimeline (participant_id: {}, lane: {}, role: {})'.format(
-      self.participantId, self.lane, self.role
+      self.participant.participant_id, self.lane, self.role
     )
   participant = models.ForeignKey(Participant)
-  participantId = models.IntegerField()
   lane = models.CharField(max_length=20)
   role = models.CharField(max_length=20)

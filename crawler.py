@@ -1,5 +1,6 @@
-import os
 import django
+import os
+import re
 
 os.environ['DJANGO_SETTINGS_MODULE'] = 'lol_pb_analyzer.settings'
 django.setup()
@@ -29,10 +30,10 @@ class Crawler:
       region, account_id, begin_index=begin_index, end_index=end_index)
 
     for match_ref in matchlist['matches']:
-      gameId = match_ref['gameId']
-      if not Match.objects.filter(gameId=gameId).first():
-        match_json = self.__watcher.match.by_id(region, gameId)
-        match = Match.objects.create(**{k: match_json[k] for k in (
+      game_id = match_ref['gameId']
+      if not Match.objects.filter(game_id=game_id).first():
+        match_json = self.__watcher.match.by_id(region, game_id)
+        match = Match.objects.create(**{self.__to_snake(k): match_json[k] for k in (
           'seasonId', 'queueId', 'gameId', 'gameVersion',
           'platformId', 'gameMode', 'mapId', 'gameType',
           'gameDuration', 'gameCreation'
@@ -42,25 +43,25 @@ class Crawler:
         for participant_identity_json in participant_identities_json:
           participant_identity = ParticipantIdentity.objects.create(
             match=match,
-            participantId=participant_identity_json['participantId'],
+            participant_id=participant_identity_json['participantId'],
           )
 
           player_json = participant_identity_json['player']
-          args = {k: player_json[k] for k in (
+          args = {self.__to_snake(k): player_json[k] for k in (
             'currentPlatformId', 'summonerName',
             'matchHistoryUri', 'platformId', 'currentAccountId',
             'profileIcon', 'summonerId', 'accountId'
           )}
-          args['participantIdentity'] = participant_identity
+          args['participant_identity'] = participant_identity
           player = Player.objects.create(**args)
 
         participants_json = match_json['participants']
         for participant_json in participants_json:
           participant = Participant.objects.create(
             match=match,
-            participantId=participant_json['participantId'],
-            teamId=participant_json['teamId'],
-            championId=participant_json['championId'],
+            participant_id=participant_json['participantId'],
+            team_id=participant_json['teamId'],
+            champion_id=participant_json['championId'],
           )
 
           participant_stats_json = participant_json['stats']
@@ -72,13 +73,13 @@ class Crawler:
           participant_timeline_json = participant_json['timeline']
           participant_timeline = ParticipantTimeline.objects.create(
             participant=participant,
-            participantId=participant_timeline_json['participantId'],
+            participant_id=participant_timeline_json['participantId'],
             lane=participant_timeline_json['lane'],
             role=participant_timeline_json['role'],
           )
 
-  def __to_snake(camel_case):
-    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+  def __to_snake(self, camel_case):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', camel_case)
     return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
 if __name__ == '__main__':
