@@ -46,23 +46,18 @@ class Crawler:
             participant_id=participant_identity_json['participantId'],
           )
 
-          player_json = participant_identity_json['player']
-          args = {self.__to_snake(k): player_json[k] for k in (
-            'currentPlatformId', 'summonerName',
-            'matchHistoryUri', 'platformId', 'currentAccountId',
-            'profileIcon', 'summonerId', 'accountId'
-          )}
-          args['participant_identity'] = participant_identity
-          player = Player.objects.create(**args)
+          player = Player.objects.create(**self.__create_args_from_json(
+            participant_identity_json['player'],
+            ('currentPlatformId', 'summonerName', 'matchHistoryUri', 'platformId',
+             'currentAccountId', 'profileIcon', 'summonerId', 'accountId'),
+            base_args={'participant_identity': participant_identity}))
 
-        participants_json = match_json['participants']
-        for participant_json in participants_json:
-          participant = Participant.objects.create(
-            match=match,
-            participant_id=participant_json['participantId'],
-            team_id=participant_json['teamId'],
-            champion_id=participant_json['championId'],
-          )
+        for participant_json in match_json['participants']:
+          participant = Participant.objects.create(**self.__create_args_from_json(
+            participant_json,
+            ('participantId', 'teamId', 'championId'),
+            base_args={'match': match},
+          ))
 
           participant_stats_json = participant_json['stats']
           participants_stats = ParticipantStats.objects.create(
@@ -73,10 +68,15 @@ class Crawler:
           participant_timeline_json = participant_json['timeline']
           participant_timeline = ParticipantTimeline.objects.create(
             participant=participant,
-            participant_id=participant_timeline_json['participantId'],
             lane=participant_timeline_json['lane'],
             role=participant_timeline_json['role'],
           )
+
+  def __create_args_from_json(self, json, keys, base_args={}):
+    return {
+      **base_args,
+      **{self.__to_snake(k): json[k] for k in keys}
+    }
 
   def __to_snake(self, camel_case):
     s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', camel_case)
