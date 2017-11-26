@@ -1,10 +1,17 @@
 from django.db import models
 
-# Create your models here.
+class Summoner(models.Model):
+  def __str__(self):
+    return 'Summoner (name: {}, account_id: {})'.format(
+      self.name, self.account_id)
+  name = models.CharField(max_length=100)
+  account_id = models.IntegerField()
+  summoner_level = models.IntegerField()
 
 class Match(models.Model):
   def __str__(self):
     return 'Match (game_id: {})'.format(self.game_id)
+
   season_id = models.IntegerField()
   queue_id = models.IntegerField()
   game_id = models.IntegerField()
@@ -21,6 +28,7 @@ class ParticipantIdentity(models.Model):
     return 'ParticipantIdentity (game_id: {}, participant_id: {})'.format(
       self.match.game_id, self.participant_id
     )
+
   match = models.ForeignKey(Match)
   participant_id = models.IntegerField()
 
@@ -29,7 +37,8 @@ class Player(models.Model):
     return 'Player (name: {}, account_id: {})'.format(
       self.summoner_name, self.account_id
     )
-  participant_identity = models.ForeignKey(ParticipantIdentity)
+
+  participant_identity = models.OneToOneField(ParticipantIdentity)
   current_platform_id = models.CharField(max_length=20)
   summoner_name = models.CharField(max_length=100)
   match_history_uri = models.CharField(max_length=100)
@@ -44,6 +53,7 @@ class Participant(models.Model):
     return 'Participant (game_id: {}, participant_id: {})'.format(
       self.match.game_id, self.participant_id
     )
+
   match = models.ForeignKey(Match)
   participant_id = models.IntegerField()
   team_id = models.IntegerField()
@@ -54,7 +64,8 @@ class ParticipantStats(models.Model):
     return 'ParticipantStats (participant_id: {}, win: {})'.format(
       self.participant.participant_id, self.win
     )
-  participant = models.ForeignKey(Participant)
+
+  participant = models.OneToOneField(Participant)
   win = models.BooleanField()
 
 class ParticipantTimeline(models.Model):
@@ -62,6 +73,14 @@ class ParticipantTimeline(models.Model):
     return 'ParticipantTimeline (participant_id: {}, lane: {}, role: {})'.format(
       self.participant.participant_id, self.lane, self.role
     )
-  participant = models.ForeignKey(Participant)
+
+  participant = models.OneToOneField(Participant)
   lane = models.CharField(max_length=20)
   role = models.CharField(max_length=20)
+
+class SummnerMatchResult(models.Model):
+  match = models.OneToOneField(Match)
+  summoner = models.OneToOneField(Summoner)
+  timeline = models.OneToOneField(ParticipantTimeline)
+  stats = models.OneToOneField(ParticipantStats)
+  participant = models.OneToOneField(Participant)

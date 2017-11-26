@@ -2,8 +2,7 @@ import django
 import os
 import re
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'lol_pb_analyzer.settings'
-django.setup()
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lol_pb_analyzer.settings')
 
 from django.conf import settings
 from riotwatcher import RiotWatcher
