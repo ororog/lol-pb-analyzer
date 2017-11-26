@@ -6,7 +6,7 @@ class Summoner(models.Model):
       self.name, self.account_id)
   name = models.CharField(max_length=100)
   account_id = models.IntegerField()
-  summoner_level = models.IntegerField()
+  summoner_level = models.IntegerField(null=True)
 
 class Match(models.Model):
   def __str__(self):
@@ -78,9 +78,9 @@ class ParticipantTimeline(models.Model):
   lane = models.CharField(max_length=20)
   role = models.CharField(max_length=20)
 
-class SummnerMatchResult(models.Model):
-  match = models.OneToOneField(Match)
-  summoner = models.OneToOneField(Summoner)
-  timeline = models.OneToOneField(ParticipantTimeline)
-  stats = models.OneToOneField(ParticipantStats)
+class SummonerMatchResult(models.Model):
+  match = models.ForeignKey(Match)
+  summoner = models.ForeignKey(Summoner)
+  timeline = models.ForeignKey(ParticipantTimeline)
+  stats = models.ForeignKey(ParticipantStats)
   participant = models.OneToOneField(Participant)
