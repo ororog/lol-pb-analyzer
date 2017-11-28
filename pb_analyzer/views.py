@@ -36,6 +36,7 @@ def analyze(request, ids):
     return render(request, 'pb_analyzer/analysis.html', {
       'summoner': summoner,
       'result': result,
+      'CHAMPIONS_BY_ID': CHAMPIONS_BY_ID,
     })
   elif request.method == 'POST':
     crawler = Crawler()
