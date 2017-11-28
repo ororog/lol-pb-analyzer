@@ -3,7 +3,10 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.template import RequestContext
 from pb_analyzer.crawler import Crawler
-from pb_analyzer.models import Summoner
+from pb_analyzer.analyzer import Analyzer
+from pb_analyzer.models import Summoner, SummonerMatchResult
+from pb_analyzer.constants import CHAMPIONS_BY_ID
+
 
 def index(request):
   if request.method == 'GET':
@@ -23,8 +26,27 @@ def index(request):
       return HttpResponse('no summoner', context)
 
 def analyze(request, ids):
-  crawler = Crawler()
-  for id in [int(id) for id in ids.split(',')]:
-    crawler.crawl_match_by_id(id)
+  summoner = Summoner.objects.filter(account_id=ids).first()
+  if not summoner:
+    return HttpResponse('該当するサモナーはいません')
 
-  return HttpResponse('hello analyze {}'.format(ids))
+  if request.method == 'GET':
+    analyzer = Analyzer()
+    result = analyzer.analyze_summoner(summoner)
+    return render(request, 'pb_analyzer/analysis.html', {
+      'summoner': summoner,
+      'result': result,
+    })
+  elif request.method == 'POST':
+    crawler = Crawler()
+    game_ids = crawler.crawl_match_by_id(summoner.account_id)
+    analyzer = Analyzer()
+    for game_id in game_ids:
+      analyzer.analyze_match_by_game_id(game_id)
+    result = analyzer.analyze_summoner(summoner)
+    context = RequestContext(request, {})
+    return render(request, 'pb_analyzer/analysis.html', {
+      'summoner': summoner,
+      'result': result,
+      'CHAMPIONS_BY_ID': CHAMPIONS_BY_ID,
+    }, context)

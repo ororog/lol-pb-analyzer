@@ -10,7 +10,11 @@ from pb_analyzer.crawler import Crawler
 
 def main():
   crawler = Crawler()
-  crawler.crawl_match_by_id(200482207)
-
+  champions = crawler.crawl_champions()
+  champions_by_id = {}
+  for name, data in  champions['data'].items():
+    champions_by_id[data['id']] = data['name']
+  for id in sorted(champions_by_id.keys()):
+    print("{}: '{}',".format(id, champions_by_id[id]))
 if __name__ == '__main__':
   main()

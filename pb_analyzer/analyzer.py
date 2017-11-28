@@ -1,15 +1,16 @@
 from pb_analyzer.models import *
+from collections import defaultdict
 
 class Analyzer:
   def analyze_match(self, match):
     results = {}
     for participant_identity in match.participantidentity_set.all():
       player = participant_identity.player
-      summoner = Summoner.objects.filter(account_id=player.account_id).first()
+      summoner = Summoner.objects.filter(account_id=player.current_account_id).first()
       if not summoner:
         summoner = Summoner.objects.create(
           name=player.summoner_name,
-          account_id=player.account_id,
+          account_id=player.current_account_id,
         )
       results[participant_identity.participant_id] = {
         'match': match,
@@ -36,3 +37,45 @@ class Analyzer:
           stats=result['stats'],
           participant=result['participant'],
         )
+
+  def analyze_match_by_game_id(self, game_id):
+    match = Match.objects.filter(game_id=game_id).first()
+    if match:
+      return self.analyze_match(match)
+    else:
+      return None
+
+  def analyze_summoner(self, summoner):
+    match_results = SummonerMatchResult.objects.filter(summoner=summoner)
+    result = {
+      'champions': {},
+      'lane': {
+        'TOP': {'win': 0, 'lose': 0, 'games': 0, 'ratio': 0},
+        'MIDDLE': {'win': 0, 'lose': 0, 'games': 0, 'ratio': 0},
+        'JUNGLE': {'win': 0, 'lose': 0, 'games': 0, 'ratio': 0},
+        'DUO_SUPPORT': {'win': 0, 'lose': 0, 'games': 0, 'ratio': 0},
+      },
+      'champions_by_lane': {
+        'TOP': {'champions': {}},
+        'MIDDLE': {'champions': {}},
+        'JUNGLE': {'champions': {}},
+        'DUO_SUPPORT': {'champions': {}},
+      },
+      'total_games': 0,
+    }
+    for match_result in match_results:
+      if match_result.stats.win:
+        win_lose = 'win'
+      else:
+        win_lose = 'lose'
+      champion_id = match_result.participant.champion_id
+      if not champion_id in result['champions']:
+        result['champions'][champion_id] = {'win': 0, 'lose': 0, 'ratio': 0, 'games': 0}
+      result['champions'][champion_id][win_lose] += 1
+      result['champions'][champion_id]['games'] += 1
+      lane = match_result.timeline.lane
+      if lane == 'BOTTOM':
+        lane = match_result.timeline.role
+      result['lane'][lane][win_lose] += 1
+      result['lane'][lane]['games'] += 1
+    return result

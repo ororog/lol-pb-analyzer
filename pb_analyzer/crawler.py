@@ -23,6 +23,9 @@ class Crawler:
       except requests.exceptions.HTTPError:
         return None
 
+  def crawl_champions(self, region='jp1', locale='ja_JP'):
+    return self.__watcher.static_data.champions(region, locale=locale)
+
   def crawl_match_by_id(self,
                         account_id,
                         region='jp1',
@@ -64,7 +67,7 @@ class Crawler:
           participant_stats_json = participant_json['stats']
           participants_stats = ParticipantStats.objects.create(
             participant=participant,
-            win=(participant_stats_json['win'] == 'true'),
+            win=participant_stats_json['win'],
           )
 
           participant_timeline_json = participant_json['timeline']
@@ -73,6 +76,7 @@ class Crawler:
             lane=participant_timeline_json['lane'],
             role=participant_timeline_json['role'],
           )
+    return [match_ref['gameId'] for match_ref in matchlist['matches']]
 
   def __create_args_from_json(self, json, keys, base_args={}):
     return {

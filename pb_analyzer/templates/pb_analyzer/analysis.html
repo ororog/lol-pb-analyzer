@@ -1,0 +1,40 @@
+{% load filter %}
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8"/>
+</head>
+<body>
+  {{ summoner.name }}の分析結果
+  <form action="." method="POST">{% csrf_token %}
+    更新する
+    <input type="hidden" name="action" value="update">
+    <input type="submit">
+  </form>
+  <div>
+    <div>
+      チャンピオン勝率
+    </div>
+    <div>
+      {% for champion_id, data in result.champions.items %}
+        <div>
+          {{ CHAMPIONS_BY_ID|get_item:champion_id }} {{ data }}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div>
+    <div>
+      レーン別勝率
+    </div>
+    <div>
+      {% for lane, win_count in result.lane.items %}
+        <div>
+          {{ lane }} {{ win_count }}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</body>
+</html>

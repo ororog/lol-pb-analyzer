@@ -79,6 +79,11 @@ class ParticipantTimeline(models.Model):
   role = models.CharField(max_length=20)
 
 class SummonerMatchResult(models.Model):
+  def __str__(self):
+    return 'SummonerMatchResult (summoner: {}, game_id: {})'.format(
+      self.summoner.name, self.match.game_id
+    )
+
   match = models.ForeignKey(Match)
   summoner = models.ForeignKey(Summoner)
   timeline = models.ForeignKey(ParticipantTimeline)
