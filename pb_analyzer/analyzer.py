@@ -54,12 +54,14 @@ class Analyzer:
         'MIDDLE': {'win': 0, 'lose': 0, 'games': 0, 'ratio': 0},
         'JUNGLE': {'win': 0, 'lose': 0, 'games': 0, 'ratio': 0},
         'DUO_SUPPORT': {'win': 0, 'lose': 0, 'games': 0, 'ratio': 0},
+        'DUO_CARRY': {'win': 0, 'lose': 0, 'games': 0, 'ratio': 0},
       },
       'champions_by_lane': {
         'TOP': {'champions': {}},
         'MIDDLE': {'champions': {}},
         'JUNGLE': {'champions': {}},
         'DUO_SUPPORT': {'champions': {}},
+        'DUO_CARRY': {'champions': {}},
       },
       'total_games': 0,
     }

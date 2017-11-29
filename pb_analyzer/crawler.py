@@ -1,8 +1,10 @@
 import os
+import time
 import re
 import requests
 from pb_analyzer.models import *
 from riotwatcher import RiotWatcher
+from pb_analyzer.analyzer import Analyzer
 
 # ororog: 200482207
 
@@ -26,11 +28,13 @@ class Crawler:
   def crawl_champions(self, region='jp1', locale='ja_JP'):
     return self.__watcher.static_data.champions(region, locale=locale)
 
+
   def crawl_match_by_id(self,
                         account_id,
                         region='jp1',
                         begin_index=0,
                         end_index=3):
+    analyzer = Analyzer()
     matchlist = self.__watcher.match.matchlist_by_account(
       region, account_id, begin_index=begin_index, end_index=end_index)
 
@@ -76,6 +80,7 @@ class Crawler:
             lane=participant_timeline_json['lane'],
             role=participant_timeline_json['role'],
           )
+        time.sleep(2)
     return [match_ref['gameId'] for match_ref in matchlist['matches']]
 
   def __create_args_from_json(self, json, keys, base_args={}):

@@ -6,6 +6,7 @@ from pb_analyzer.crawler import Crawler
 from pb_analyzer.analyzer import Analyzer
 from pb_analyzer.models import Summoner, SummonerMatchResult
 from pb_analyzer.constants import CHAMPIONS_BY_ID
+from background_task import background
 
 
 def index(request):
@@ -39,11 +40,8 @@ def analyze(request, ids):
       'CHAMPIONS_BY_ID': CHAMPIONS_BY_ID,
     })
   elif request.method == 'POST':
-    crawler = Crawler()
-    game_ids = crawler.crawl_match_by_id(summoner.account_id)
+    run_crawler(summoner.account_id)
     analyzer = Analyzer()
-    for game_id in game_ids:
-      analyzer.analyze_match_by_game_id(game_id)
     result = analyzer.analyze_summoner(summoner)
     context = RequestContext(request, {})
     return render(request, 'pb_analyzer/analysis.html', {
@@ -51,3 +49,11 @@ def analyze(request, ids):
       'result': result,
       'CHAMPIONS_BY_ID': CHAMPIONS_BY_ID,
     }, context)
+
+@background(schedule=5)
+def run_crawler(account_id):
+  crawler = Crawler()
+  analyzer = Analyzer()
+  game_ids = crawler.crawl_match_by_id(account_id, end_index=100)
+  for game_id in game_ids:
+    analyzer.analyze_match_by_game_id(game_id)
