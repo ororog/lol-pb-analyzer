@@ -5,8 +5,8 @@ class Summoner(models.Model):
     return 'Summoner (name: {}, account_id: {})'.format(
       self.name, self.account_id)
   name = models.CharField(max_length=100)
-  account_id = models.IntegerField()
-  summoner_level = models.IntegerField(null=True)
+  account_id = models.BigIntegerField()
+  summoner_level = models.BigIntegerField(null=True)
 
 class Match(models.Model):
   def __str__(self):
@@ -14,14 +14,14 @@ class Match(models.Model):
 
   season_id = models.IntegerField()
   queue_id = models.IntegerField()
-  game_id = models.IntegerField()
+  game_id = models.BigIntegerField()
   game_version = models.CharField(max_length=20)
   platform_id = models.CharField(max_length=20)
   game_mode = models.CharField(max_length=20)
   map_id = models.IntegerField()
   game_type = models.CharField(max_length=20)
-  game_duration = models.IntegerField()
-  game_creation = models.IntegerField()
+  game_duration = models.BigIntegerField()
+  game_creation = models.BigIntegerField()
 
 class ParticipantIdentity(models.Model):
   def __str__(self):
@@ -43,10 +43,10 @@ class Player(models.Model):
   summoner_name = models.CharField(max_length=100)
   match_history_uri = models.CharField(max_length=100)
   platform_id = models.CharField(max_length=20)
-  current_account_id = models.IntegerField()
+  current_account_id = models.BigIntegerField()
   profile_icon = models.IntegerField()
-  summoner_id = models.IntegerField()
-  account_id = models.IntegerField()
+  summoner_id = models.BigIntegerField()
+  account_id = models.BigIntegerField()
 
 class Participant(models.Model):
   def __str__(self):
