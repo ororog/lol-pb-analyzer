@@ -5,6 +5,7 @@ import requests
 from pb_analyzer.models import *
 from riotwatcher import RiotWatcher
 from pb_analyzer.analyzer import Analyzer
+from django.db import transaction
 
 # ororog: 200482207
 
@@ -41,6 +42,8 @@ class Crawler:
     for match_ref in matchlist['matches']:
       game_id = match_ref['gameId']
       if not Match.objects.filter(game_id=game_id).first():
+        continue
+      with transaction.atomic():
         match_json = self.__watcher.match.by_id(region, game_id)
         match = Match.objects.create(**{self.__to_snake(k): match_json[k] for k in (
           'seasonId', 'queueId', 'gameId', 'gameVersion',
@@ -80,7 +83,7 @@ class Crawler:
             lane=participant_timeline_json['lane'],
             role=participant_timeline_json['role'],
           )
-        time.sleep(2)
+      time.sleep(2)
     return [match_ref['gameId'] for match_ref in matchlist['matches']]
 
   def __create_args_from_json(self, json, keys, base_args={}):
