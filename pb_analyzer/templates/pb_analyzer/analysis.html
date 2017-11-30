@@ -1,11 +1,6 @@
+{% extends 'pb_analyzer/layout.html' %}
 {% load filter %}
-
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-  <meta charset="utf-8"/>
-</head>
-<body>
+{% block content %}
   {{ summoner.name }}の分析結果
   <form action="." method="POST">{% csrf_token %}
     更新する
@@ -36,5 +31,4 @@
       {% endfor %}
     </div>
   </div>
-</body>
-</html>
+{% endblock %}
