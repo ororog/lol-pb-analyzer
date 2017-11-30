@@ -14,29 +14,39 @@ def index(request):
     return render(request, 'pb_analyzer/index.html')
   elif request.method == 'POST':
     context = RequestContext(request, {})
-    summoner_name = request.POST['summoner_name']
-    summoner = Summoner.objects.filter(name=summoner_name).first()
+    summoner_names = request.POST['summoner_names'].lower().replace(' ', '').split(',')
+    summoner_ids = []
+    crawler = Crawler()
+    for summoner_name in summoner_names:
+      summoner = Summoner.objects.filter(name=summoner_name).first()
 
-    if not summoner:
-      crawler = Crawler()
-      summoner = crawler.crawl_summoner_by_name(summoner_name)
+      if not summoner:
+        summoner = crawler.crawl_summoner_by_name(summoner_name)
+        return HttpResponse('{}は存在しません'.format(summoner_name), context)
+      summoner_ids.append(summoner.account_id)
 
-    if summoner:
-      return redirect('analyze', summoner.account_id)
-    else:
-      return HttpResponse('no summoner', context)
+    return redirect('analyze', ','.join([str(id) for id in summoner_ids]))
+
 
 def analyze(request, ids):
-  summoner = Summoner.objects.filter(account_id=ids).first()
-  if not summoner:
-    return HttpResponse('該当するサモナーはいません')
+  summoners = []
+  for account_id in ids.split(','):
+    print(account_id)
+    summoner = Summoner.objects.filter(account_id=account_id).first()
+    if not summoner:
+      return HttpResponse('{}は存在しないidです'.format(account_id))
+    summoners.append(summoner)
 
   if request.method == 'GET':
     analyzer = Analyzer()
-    result = analyzer.analyze_summoner(summoner)
+    results = []
+    for summoner in summoners:
+      results.append({
+        'summoner': summoner,
+        'result' : analyzer.analyze_summoner(summoner),
+      })
     return render(request, 'pb_analyzer/analysis.html', {
-      'summoner': summoner,
-      'result': result,
+      'results': results,
       'CHAMPIONS_BY_ID': CHAMPIONS_BY_ID,
     })
   elif request.method == 'POST':

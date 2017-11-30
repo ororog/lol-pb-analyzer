@@ -1,34 +1,39 @@
 {% extends 'pb_analyzer/layout.html' %}
 {% load filter %}
 {% block content %}
-  {{ summoner.name }}の分析結果
-  <form action="." method="POST">{% csrf_token %}
-    更新する
-    <input type="hidden" name="action" value="update">
-    <input type="submit">
-  </form>
-  <div>
+  {% for result in results %}
     <div>
-      チャンピオン勝率
-    </div>
-    <div>
-      {% for champion_id, data in result.champions.items %}
+      {{ result.summoner.name }}の分析結果
+      <form action="." method="POST">{% csrf_token %}
+        更新する
+        <input type="hidden" name="action" value="update">
+        <input type="hidden" name="account_id" value="{{ result.summnoer.acccount_id }}">
+        <input type="submit">
+      </form>
+      <div>
         <div>
-          {{ CHAMPIONS_BY_ID|get_item:champion_id }} {{ data }}
+          チャンピオン勝率
         </div>
-      {% endfor %}
-    </div>
-  </div>
-  <div>
-    <div>
-      レーン別勝率
-    </div>
-    <div>
-      {% for lane, win_count in result.lane.items %}
         <div>
-          {{ lane }} {{ win_count }}
+          {% for champion_id, data in result.result.champions.items %}
+            <div>
+              {{ CHAMPIONS_BY_ID|get_item:champion_id }} {{ data }}
+            </div>
+          {% endfor %}
         </div>
-      {% endfor %}
+      </div>
+      <div>
+        <div>
+          レーン別勝率
+        </div>
+        <div>
+          {% for lane, win_count in result.result.lane.items %}
+            <div>
+              {{ lane }} {{ win_count }}
+            </div>
+          {% endfor %}
+        </div>
+      </div>
     </div>
-  </div>
+  {% endfor %}
 {% endblock %}

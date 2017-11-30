@@ -1,8 +1,8 @@
 {% extends 'pb_analyzer/layout.html' %}
 {% block content %}
-<form action="." method="POST">{% csrf_token %}
-  サモナーネームを入力してください
-  <input name="summoner_names">
-  <input type="submit">
-</form>
+  <form action="." method="POST">{% csrf_token %}
+    サモナーネームを入力してください
+    <input name="summoner_names">
+    <input type="submit">
+  </form>
 {% endblock %}
