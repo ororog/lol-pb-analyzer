@@ -1,54 +1,52 @@
 {% extends 'pb_analyzer/layout.html' %}
 {% load filter %}
 {% block content %}
-  <ul class="nav nav-tabs">
-    <li class="active"><a data-toggle="tab" href="#team">チーム全体</a></li>
-    {% for result in results %}
-      <li>
-        <a data-toggle="tab" href="#{{ result.summoner.account_id }}">
-          {{ result.summoner.name }}
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
-  <div class="tab-content">
-    <div id="team" class="tab-pane fade in active">
-      チーム全体
-    </div>
-    {% for result in results %}
-      <div id="{{ result.summoner.account_id }}" class="tab-pane fade">
-        {{ result.summoner.name }}の分析結果
-        <form action="." method="POST">{% csrf_token %}
-          更新する
-          <input type="hidden" name="action" value="update">
-          <input type="hidden" name="account_id" value="{{ result.summnoer.acccount_id }}">
-          <input type="submit">
-        </form>
-        <div>
-          <div>
-            レーン別勝率
-          </div>
-          <div>
-            {% for lane, win_count in result.result.lane.items %}
-              <div>
-                {{ lane }} {{ win_count }}
-              </div>
-            {% endfor %}
-          </div>
-        </div>
-        <div>
-          <div>
-            チャンピオン勝率
-          </div>
-          <div>
-            {% for champion_id, data in result.result.champions.items %}
-              <div>
-                {{ CHAMPIONS_BY_ID|get_item:champion_id }} {{ data }}
-              </div>
-            {% endfor %}
-          </div>
-        </div>
+  <div class="container-fluid">
+    <ul class="nav nav-tabs">
+      <li class="active"><a data-toggle="tab" href="#team">チーム全体</a></li>
+      {% for result in results %}
+        <li>
+          <a data-toggle="tab" href="#{{ result.summoner.account_id }}">
+            {{ result.summoner.name }}
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+    <div class="tab-content">
+      <div id="team" class="tab-pane fade in active">
+        <h2>チーム分析</h2>
       </div>
-    {% endfor %}
+      {% for result in results %}
+        <div id="{{ result.summoner.account_id }}" class="tab-pane fade">
+          <h2>{{ result.summoner.name }}の分析結果</h2>
+          <form action="." method="POST">{% csrf_token %}
+            更新する
+            <input type="hidden" name="action" value="update">
+            <input type="hidden" name="account_id" value="{{ result.summnoer.acccount_id }}">
+            <input type="submit">
+          </form>
+          <div>
+            <h3>レーン別勝率</h3>
+            <div>
+              {% for lane, win_count in result.result.lane.items %}
+                <div>
+                  {{ lane }} {{ win_count }}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+          <div>
+            <h3>チャンピオン勝率</h3>
+            <div>
+              {% for champion_id, data in result.result.champions.items %}
+                <div>
+                  {{ CHAMPIONS_BY_ID|get_item:champion_id }} {{ data }}
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
   </div>
 {% endblock %}
