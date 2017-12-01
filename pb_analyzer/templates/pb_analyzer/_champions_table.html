@@ -1,0 +1,18 @@
+{% load filter %}
+
+<table class="table table-striped table-condensed">
+  <thead class="thead-inverse">
+    <tr>
+      <th>チャンピオン</th>
+      <th>Win</th>
+      <th>Lose</th>
+      <th>ゲーム数</th>
+      <th>勝率</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for champion_id, data in champions_data.items %}
+      {% include 'pb_analyzer/_data_row.html' with header=champion_id|get_champion_name data=data %}
+    {% endfor %}
+  </tbody>
+</table>

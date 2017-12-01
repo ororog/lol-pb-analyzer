@@ -5,7 +5,6 @@ from django.template import RequestContext
 from pb_analyzer.crawler import Crawler
 from pb_analyzer.analyzer import Analyzer
 from pb_analyzer.models import Summoner, SummonerMatchResult
-from pb_analyzer.constants import CHAMPIONS_BY_ID
 from background_task import background
 
 
@@ -51,8 +50,7 @@ def analyze(request, ids):
   if request.method == 'GET':
     return render(request, 'pb_analyzer/analysis.html', {
       'team_result': team_result,
-      'results': results,
-      'CHAMPIONS_BY_ID': CHAMPIONS_BY_ID,
+      'results': results
     })
   elif request.method == 'POST':
     run_crawler(request.POST['account_id'])
@@ -60,7 +58,6 @@ def analyze(request, ids):
     return render(request, 'pb_analyzer/analysis.html', {
       'team_result': team_result,
       'results': results,
-      'CHAMPIONS_BY_ID': CHAMPIONS_BY_ID,
     }, context)
 
 @background(schedule=5)
