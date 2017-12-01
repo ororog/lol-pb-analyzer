@@ -15,6 +15,26 @@
     <div class="tab-content">
       <div id="team" class="tab-pane fade in active">
         <h2>チーム分析</h2>
+        <div>
+          <h3>レーン別勝率</h3>
+          <div>
+            {% for lane, win_count in team_result.lane.items %}
+              <div>
+                {{ lane }} {{ win_count }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+        <div>
+          <h3>チャンピオン勝率</h3>
+          <div>
+            {% for champion_id, data in team_result.champions.items %}
+              <div>
+                {{ CHAMPIONS_BY_ID|get_item:champion_id }} {{ data }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
       </div>
       {% for result in results %}
         <div id="{{ result.summoner.account_id }}" class="tab-pane fade">

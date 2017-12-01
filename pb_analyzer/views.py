@@ -37,26 +37,29 @@ def analyze(request, ids):
       return HttpResponse('{}は存在しないidです'.format(account_id))
     summoners.append(summoner)
 
+  analyzer = Analyzer()
+  results = []
+  for summoner in summoners:
+    data = analyzer.analyze_summoner(summoner)
+    results.append({
+      'summoner': summoner,
+      'result' : data,
+    })
+
+  team_result = analyzer.merge_result([result['result'] for result in results])
+
   if request.method == 'GET':
-    analyzer = Analyzer()
-    results = []
-    for summoner in summoners:
-      results.append({
-        'summoner': summoner,
-        'result' : analyzer.analyze_summoner(summoner),
-      })
     return render(request, 'pb_analyzer/analysis.html', {
+      'team_result': team_result,
       'results': results,
       'CHAMPIONS_BY_ID': CHAMPIONS_BY_ID,
     })
   elif request.method == 'POST':
-    run_crawler(summoner.account_id)
-    analyzer = Analyzer()
-    result = analyzer.analyze_summoner(summoner)
+    run_crawler(request.POST['account_id'])
     context = RequestContext(request, {})
     return render(request, 'pb_analyzer/analysis.html', {
-      'summoner': summoner,
-      'result': result,
+      'team_result': team_result,
+      'results': results,
       'CHAMPIONS_BY_ID': CHAMPIONS_BY_ID,
     }, context)
 

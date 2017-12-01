@@ -81,3 +81,37 @@ class Analyzer:
       result['lane'][lane][win_lose] += 1
       result['lane'][lane]['games'] += 1
     return result
+
+  def merge_result(self, results):
+    res = {
+      'champions': {},
+      'lane': {
+        'TOP': {'win': 0, 'lose': 0, 'games': 0, 'ratio': 0},
+        'JUNGLE': {'win': 0, 'lose': 0, 'games': 0, 'ratio': 0},
+        'MIDDLE': {'win': 0, 'lose': 0, 'games': 0, 'ratio': 0},
+        'DUO_CARRY': {'win': 0, 'lose': 0, 'games': 0, 'ratio': 0},
+        'DUO_SUPPORT': {'win': 0, 'lose': 0, 'games': 0, 'ratio': 0},
+      },
+      'champions_by_lane': {
+        'TOP': {'champions': {}},
+        'JUNGLE': {'champions': {}},
+        'MIDDLE': {'champions': {}},
+        'DUO_CARRY': {'champions': {}},
+        'DUO_SUPPORT': {'champions': {}},
+      },
+      'total_games': 0,
+    }
+    for data in results:
+      for champion_id, value in data['champions'].items():
+        if not champion_id in res['champions']:
+          res['champions'][champion_id] = {'win': 0, 'lose': 0, 'games': 0, 'ratio': 0}
+        res['champions'][champion_id]['win'] += value['win']
+        res['champions'][champion_id]['lose'] += value['lose']
+        res['champions'][champion_id]['games'] += value['games']
+
+      for lane_key, lane_data in res['lane'].items():
+        lane_data['win'] += data['lane'][lane_key]['win']
+        lane_data['lose'] += data['lane'][lane_key]['lose']
+        lane_data['games'] += data['lane'][lane_key]['games']
+
+    return res
