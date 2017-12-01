@@ -76,8 +76,13 @@ class Analyzer:
       result['champions'][champion_id][win_lose] += 1
       result['champions'][champion_id]['games'] += 1
       lane = match_result.timeline.lane
-      if lane == 'BOTTOM':
+      if lane == 'NONE':
+        continue
+      elif lane == 'BOTTOM':
         lane = match_result.timeline.role
+      if lane == 'NONE':
+        continue
+
       result['lane'][lane][win_lose] += 1
       result['lane'][lane]['games'] += 1
     return result

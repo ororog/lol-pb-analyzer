@@ -30,7 +30,7 @@
           <form action="." method="POST">{% csrf_token %}
             更新する
             <input type="hidden" name="action" value="update">
-            <input type="hidden" name="account_id" value="{{ result.summnoer.acccount_id }}">
+            <input type="hidden" name="account_id" value="{{ result.summoner.account_id }}">
             <input type="submit">
           </form>
           <div>

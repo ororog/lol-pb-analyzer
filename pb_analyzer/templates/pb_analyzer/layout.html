@@ -9,7 +9,10 @@
 </head>
 <body>
   <div class="container">
-  <h1>Target Bang!</h1>
+    <span>
+      現在のキュー: {{ queue_count }}
+    </span>
+    <h1>Target Bang!</h1>
   </div>
   {% block content %}{% endblock %}
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
