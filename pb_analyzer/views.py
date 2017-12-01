@@ -23,7 +23,7 @@ def index(request):
 
       if not summoner:
         summoner = crawler.crawl_summoner_by_name(summoner_name)
-        return HttpResponse('{}は存在しません'.format(summoner_name), context)
+        return HttpResponse('Summnoer "{}" is not found.'.format(summoner_name), context)
       summoner_ids.append(summoner.account_id)
 
     return redirect('analyze', ','.join([str(id) for id in summoner_ids]))
@@ -34,7 +34,7 @@ def analyze(request, ids):
   for account_id in ids.split(','):
     summoner = Summoner.objects.filter(account_id=account_id).first()
     if not summoner:
-      return HttpResponse('{}は存在しないidです'.format(account_id))
+      return HttpResponse('Account ID {} is not found'.format(account_id))
     summoners.append(summoner)
 
   analyzer = Analyzer()
