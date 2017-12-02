@@ -1,7 +1,7 @@
 import django
 import os
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lol_pb_analyzer.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'lol.settings')
 django.setup()
 
 from pb_analyzer.crawler import Crawler
