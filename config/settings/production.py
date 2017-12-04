@@ -13,8 +13,8 @@ ALLOWED_HOSTS = ['*']
 DATABASES = {
   'default': {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': env('DB_NAME'),
-    'USER': env('DB_USERNAME'),
+    'NAME': 'loldb',
+    'USER': 'loldb',
     'PASSWORD': env('DB_PASSWORD'),
     'HOST': '',
     'PORT': '',

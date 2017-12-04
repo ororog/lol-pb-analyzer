@@ -84,8 +84,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'loldb',
-        'USER': 'testuser',
+        'NAME': 'loldb_dev',
+        'USER': 'loldb_dev',
         'PASSWORD': 'password',
         'HOST': '',
         'PORT': '',
