@@ -20,3 +20,5 @@ DATABASES = {
     'PORT': '',
   }
 }
+
+STATIC_ROOT = env('STATIC_ROOT')

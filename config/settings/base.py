@@ -17,6 +17,12 @@ import environ
 # BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 BASE_DIR = environ.Path(__file__) - 3
 
+env = environ.Env()
+env_file = str(BASE_DIR.path('.env'))
+env.read_env(env_file)
+
+RGAPI = env('RGAPI')
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -78,8 +84,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'pb_analyzer_db',
-        'USER': 'ororog',
+        'NAME': 'loldb',
+        'USER': 'testuser',
         'PASSWORD': 'password',
         'HOST': '',
         'PORT': '',

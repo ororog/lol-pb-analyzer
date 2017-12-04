@@ -23,7 +23,8 @@ def index(request):
 
       if not summoner:
         summoner = crawler.crawl_summoner_by_name(summoner_name)
-        return HttpResponse('Summnoer "{}" is not found.'.format(summoner_name), context)
+        if not summoner:
+          return HttpResponse('Summnoer "{}" is not found.'.format(summoner_name), context)
       summoner_ids.append(summoner.account_id)
 
     return redirect('analyze', ','.join([str(id) for id in summoner_ids]))

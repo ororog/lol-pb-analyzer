@@ -2,6 +2,8 @@ import os
 import time
 import re
 import requests
+
+from django.conf import settings
 from pb_analyzer.models import *
 from riotwatcher import RiotWatcher
 from pb_analyzer.analyzer import Analyzer
@@ -10,7 +12,7 @@ from django.db import transaction
 # ororog: 200482207
 
 class Crawler:
-  def __init__(self, api_key=os.getenv('RGAPI')):
+  def __init__(self, api_key=settings.RGAPI):
     self.__watcher = RiotWatcher(api_key)
 
   def crawl_summoner_by_name(self, summoner_name, region='jp1'):
