@@ -87,7 +87,7 @@ DATABASES = {
         'NAME': 'loldb_dev',
         'USER': 'loldb_dev',
         'PASSWORD': 'password',
-        'HOST': '',
+        'HOST': 'localhost',
         'PORT': '',
     }
 }
