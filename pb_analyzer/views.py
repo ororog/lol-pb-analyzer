@@ -58,11 +58,7 @@ def analyze(request, ids):
   elif request.method == 'POST':
     run_crawler(request.POST['account_id'])
     context = RequestContext(request, {})
-    return render(request, 'pb_analyzer/analysis.html', {
-      'queue_count': Task.objects.all().count(),
-      'team_result': team_result,
-      'results': results,
-    }, context)
+    return redirect('analyze', ids)
 
 @background(schedule=3)
 def run_crawler(account_id):
