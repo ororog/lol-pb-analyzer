@@ -16,7 +16,7 @@ DATABASES = {
     'NAME': 'loldb',
     'USER': 'loldb',
     'PASSWORD': env('DB_PASSWORD'),
-    'HOST': '',
+    'HOST': 'localhost',
     'PORT': '',
   }
 }
