@@ -46,7 +46,11 @@ class Analyzer:
       return None
 
   def analyze_summoner(self, summoner):
-    match_results = SummonerMatchResult.objects.filter(summoner=summoner)
+    match_results = SummonerMatchResult.objects.filter(
+      summoner=summoner,
+      match__season_id__in=[7, 8, 9],
+      match__queue_id__in=[400, 420, 430, 440],
+    )
     result = {
       'champions': {},
       'lane': {

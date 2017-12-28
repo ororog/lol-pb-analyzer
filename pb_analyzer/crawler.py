@@ -32,10 +32,12 @@ class Crawler:
     return self.__watcher.static_data.champions(region, locale=locale)
 
   def list_gameids_by_account_id(self,
-                                  account_id,
-                                  region='jp1',
-                                  begin_index=0,
-                                  end_index=3):
+                                 account_id,
+                                 region='jp1',
+                                 season=[7, 8, 9],
+                                 queue=[400, 420, 430, 440],
+                                 begin_index=0,
+                                 end_index=3):
     matchlist = self.__watcher.match.matchlist_by_account(
       region, account_id, begin_index=begin_index, end_index=end_index)
     return [match_ref['gameId'] for match_ref in matchlist['matches']]
