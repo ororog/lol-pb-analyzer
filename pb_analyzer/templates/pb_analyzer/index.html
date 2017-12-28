@@ -1,8 +1,14 @@
 {% extends 'pb_analyzer/layout.html' %}
 {% block content %}
-  <form action="." method="POST">{% csrf_token %}
-    サモナーネームを入力してください
-    <input name="summoner_names">
-    <input type="submit">
-  </form>
+  <div class="container">
+    <form action="." method="POST">{% csrf_token %}
+      <div>
+        サモナーネームを入力してください<br>
+        <input name="summoner_names">
+        <input type="submit">
+      </div>
+      ※カンマ区切りで複数のサモナーを同時に表示できます<br>
+      例) サモナー１,summoner2,さもなー3
+    </form>
+  </div>
 {% endblock %}
