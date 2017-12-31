@@ -28,6 +28,19 @@ class Crawler:
       except requests.exceptions.HTTPError:
         return None
 
+  def update_summoner_by_id(self, account_id, region='jp1'):
+    summoner = Summoner.objects.filter(account_id=account_id).first()
+    summoner_json = self.__watcher.summoner.by_account(region, account_id)
+    summoner_id = summoner_json['id']
+    summoner_leagues_json = self.__watcher.league.positions_by_summoner(region, summoner_id)
+    league_json = [x for x in summoner_leagues_json
+                   if x['queueType'] == 'RANKED_SOLO_5x5'][0]
+    print(league_json)
+    summoner.summoner_level = summoner_json['summonerLevel']
+    summoner.tier = league_json['tier']
+    summoner.rank = league_json['rank']
+    summoner.save()
+
   def crawl_champions(self, region='jp1', locale='ja_JP'):
     return self.__watcher.static_data.champions(region, locale=locale)
 
