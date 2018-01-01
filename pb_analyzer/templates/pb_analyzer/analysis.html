@@ -26,7 +26,12 @@
       </div>
       {% for result in results %}
         <div id="{{ result.summoner.account_id }}" class="tab-pane fade">
-          <h2>{{ result.summoner.name }}の分析結果</h2>
+          <h2>{{ result.summoner.name }}</h2>
+          {% if result.summoner.tier is not None %}
+          <div>
+            ランク: {{ result.summoner.tier }} {{ result.summoner.rank }}
+          </div>
+          {% endif %}
           <form action="." method="POST">{% csrf_token %}
             <input type="hidden" name="action" value="update">
             <input type="hidden" name="account_id" value="{{ result.summoner.account_id }}">
