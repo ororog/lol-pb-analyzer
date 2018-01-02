@@ -3,17 +3,17 @@ import time
 import re
 import requests
 
-from django.conf import settings
 from pb_analyzer.models import *
-from riotwatcher import RiotWatcher
+from pb_analyzer.watcher import Watcher
 from pb_analyzer.analyzer import Analyzer
 from django.db import transaction
+
 
 # ororog: 200482207
 
 class Crawler:
-  def __init__(self, api_key=settings.RGAPI):
-    self.__watcher = RiotWatcher(api_key)
+  def __init__(self):
+    self.__watcher = Watcher()
 
   def crawl_summoner_by_name(self, summoner_name, region='jp1'):
     if not Summoner.objects.filter(name=summoner_name).first():
@@ -35,7 +35,6 @@ class Crawler:
     summoner_leagues_json = self.__watcher.league.positions_by_summoner(region, summoner_id)
     league_json = [x for x in summoner_leagues_json
                    if x['queueType'] == 'RANKED_SOLO_5x5'][0]
-    print(league_json)
     summoner.summoner_level = summoner_json['summonerLevel']
     summoner.tier = league_json['tier']
     summoner.rank = league_json['rank']
