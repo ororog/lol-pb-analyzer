@@ -57,13 +57,16 @@ def analyze(request, names):
     context = RequestContext(request, {})
     return redirect('analyze', names)
 
-@background(schedule=3)
 def run_crawler(account_id):
   crawler = Crawler()
   crawler.update_summoner_by_id(account_id)
-  game_ids = crawler.list_gameids_by_account_id(account_id, end_index=100)
-  for game_id in game_ids:
-    crawl_match_by_game_id(game_id)
+  try:
+    game_ids = crawler.list_gameids_by_account_id(account_id, end_index=100)
+    for game_id in game_ids:
+      crawl_match_by_game_id(game_id)
+  except:
+    import traceback
+    traceback.print_exc()
 
 @background(schedule=0)
 def crawl_match_by_game_id(game_id):
