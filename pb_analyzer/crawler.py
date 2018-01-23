@@ -33,11 +33,14 @@ class Crawler:
     summoner_json = self.__watcher.summoner.by_account(region, account_id)
     summoner_id = summoner_json['id']
     summoner_leagues_json = self.__watcher.league.positions_by_summoner(region, summoner_id)
-    league_json = [x for x in summoner_leagues_json
-                   if x['queueType'] == 'RANKED_SOLO_5x5'][0]
     summoner.summoner_level = summoner_json['summonerLevel']
-    summoner.tier = league_json['tier']
-    summoner.rank = league_json['rank']
+    league_json = [x for x in summoner_leagues_json if x['queueType'] == 'RANKED_SOLO_5x5']
+    if len(league_json) > 0:
+      summoner.tier = league_json[0]['tier']
+      summoner.rank = league_json[0]['rank']
+    else:
+      summoner.tier = ''
+      summoner.rank = ''
     summoner.save()
 
   def crawl_champions(self, region='jp1', locale='ja_JP'):

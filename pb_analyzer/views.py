@@ -71,5 +71,4 @@ def crawl_match_by_game_id(game_id):
   analyzer = Analyzer()
   if not Match.objects.filter(game_id=game_id).first():
     crawler.crawl_match_by_game_id(game_id)
-    time.sleep(0.033)
   analyzer.analyze_match_by_game_id(game_id)
