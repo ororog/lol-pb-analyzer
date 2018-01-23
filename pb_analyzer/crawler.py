@@ -46,7 +46,7 @@ class Crawler:
   def list_gameids_by_account_id(self,
                                  account_id,
                                  region='jp1',
-                                 season=[7, 8, 9],
+                                 season=[7, 8, 9, 10, 11],
                                  queue=[400, 420, 430, 440],
                                  begin_index=0,
                                  end_index=3):
