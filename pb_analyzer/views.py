@@ -21,9 +21,14 @@ def index(request):
     for summoner_name in summoner_names:
       summoner = Summoner.objects.filter(name=summoner_name).first()
       if not summoner:
-        summoner = crawler.crawl_summoner_by_name(summoner_name)
-        if not summoner:
-          return HttpResponse('Summnoer "{}" is not found.'.format(summoner_name), context)
+        try:
+          summoner = crawler.crawl_summoner_by_name(summoner_name)
+          if not summoner:
+            return HttpResponse('Summnoer "{}" is not found.'.format(summoner_name), context)
+        except:
+          import traceback
+          traceback.print_exc()
+          return HttpResponse('Sorry, API Limit exceeding now...', context)
     return redirect('analyze', ','.join(summoner_names))
 
 def analyze(request, names):
@@ -74,4 +79,5 @@ def crawl_match_by_game_id(game_id):
   analyzer = Analyzer()
   if not Match.objects.filter(game_id=game_id).first():
     crawler.crawl_match_by_game_id(game_id)
+    time.sleep(1)
   analyzer.analyze_match_by_game_id(game_id)
