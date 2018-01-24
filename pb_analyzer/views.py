@@ -13,7 +13,9 @@ from background_task import background
 
 def index(request):
   if request.method == 'GET':
-    return render(request, 'pb_analyzer/index.html')
+    return render(request, 'pb_analyzer/index.html', {
+      'queue_count': Task.objects.all().count()
+    })
   elif request.method == 'POST':
     context = RequestContext(request, {})
     summoner_names = request.POST['summoner_names'].split(',')
