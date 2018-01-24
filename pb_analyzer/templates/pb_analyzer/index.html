@@ -1,4 +1,5 @@
 {% extends 'pb_analyzer/layout.html' %}
+{% load static %}
 {% block content %}
   <div class="container">
     <form action="." method="POST">{% csrf_token %}
@@ -7,8 +8,27 @@
         <input name="summoner_names">
         <input type="submit">
       </div>
-      ※カンマ区切りで複数のサモナーを同時に表示できます<br>
-      例) サモナー１,summoner2,さもなー3
+
+
+      <div>
+        <h2>使い方</h2>
+        <ol>
+          <li>サモナーネームを入力します。カンマ区切りで複数のサモナーを同時に入力するとチーム全員のデータが見れます。</li>
+          <ul>
+            <li>(例) <a href="/summoners/おろろぐ,ukitu">おろろぐ,ukitu</a></li>
+          </ul>
+          <li>変更後のページで自分のページを表示して、更新ボタンを押します。</li>
+          <ul>
+            <img src="{% static 'images/example.png' %}"
+          </ul>
+          <li>直近100試合を取得、解析します。キューが消化されるまでしばらく待ちます。</li>
+        </ol>
+        <h2>注意事項</h2>
+        <ul>
+          <li>試合は約1秒で1試合取得できます</li>
+          <li>APIの制限により、キューの消化が止まることがあります。しばらくお待ちください。</li>
+        </ul>
+      </div>
     </form>
   </div>
 {% endblock %}
