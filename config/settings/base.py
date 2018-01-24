@@ -11,17 +11,10 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-import environ
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BASE_DIR = environ.Path(__file__) - 3
-
-env = environ.Env()
-env_file = str(BASE_DIR.path('.env'))
-env.read_env(env_file)
-
-RGAPI = env('RGAPI')
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+RGAPI = os.environ['RGAPI']
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -131,5 +124,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-  str(BASE_DIR.path('static')),
+  os.path.join(BASE_DIR, 'static'),
 )

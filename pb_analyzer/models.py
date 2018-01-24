@@ -31,7 +31,7 @@ class ParticipantIdentity(models.Model):
       self.match.game_id, self.participant_id
     )
 
-  match = models.ForeignKey(Match)
+  match = models.ForeignKey(Match, models.CASCADE)
   participant_id = models.IntegerField()
 
 class Player(models.Model):
@@ -40,7 +40,7 @@ class Player(models.Model):
       self.summoner_name, self.account_id
     )
 
-  participant_identity = models.OneToOneField(ParticipantIdentity)
+  participant_identity = models.OneToOneField(ParticipantIdentity, models.CASCADE)
   current_platform_id = models.CharField(max_length=20)
   summoner_name = models.CharField(max_length=100)
   match_history_uri = models.CharField(max_length=100)
@@ -56,7 +56,7 @@ class Participant(models.Model):
       self.match.game_id, self.participant_id
     )
 
-  match = models.ForeignKey(Match)
+  match = models.ForeignKey(Match, models.CASCADE)
   participant_id = models.IntegerField()
   team_id = models.IntegerField()
   champion_id = models.IntegerField()
@@ -67,7 +67,7 @@ class ParticipantStats(models.Model):
       self.participant.participant_id, self.win
     )
 
-  participant = models.OneToOneField(Participant)
+  participant = models.OneToOneField(Participant, models.CASCADE)
   win = models.BooleanField()
 
 class ParticipantTimeline(models.Model):
@@ -76,7 +76,7 @@ class ParticipantTimeline(models.Model):
       self.participant.participant_id, self.lane, self.role
     )
 
-  participant = models.OneToOneField(Participant)
+  participant = models.OneToOneField(Participant, models.CASCADE)
   lane = models.CharField(max_length=20)
   role = models.CharField(max_length=20)
 
@@ -86,8 +86,8 @@ class SummonerMatchResult(models.Model):
       self.summoner.name, self.match.game_id
     )
 
-  match = models.ForeignKey(Match)
-  summoner = models.ForeignKey(Summoner)
-  timeline = models.ForeignKey(ParticipantTimeline)
-  stats = models.ForeignKey(ParticipantStats)
-  participant = models.OneToOneField(Participant)
+  match = models.ForeignKey(Match, models.CASCADE)
+  summoner = models.ForeignKey(Summoner, models.CASCADE)
+  timeline = models.ForeignKey(ParticipantTimeline, models.CASCADE)
+  stats = models.ForeignKey(ParticipantStats, models.CASCADE)
+  participant = models.OneToOneField(Participant, models.CASCADE)
