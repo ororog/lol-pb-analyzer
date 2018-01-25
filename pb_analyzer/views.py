@@ -61,13 +61,17 @@ def analyze(request, names):
       'results': results
     })
   elif request.method == 'POST':
-    run_crawler(request.POST['account_id'])
+    account_id = request.POST['account_id']
+    update_summoner(account_id)
+    run_crawler(account_id)
     context = RequestContext(request, {})
     return redirect('analyze', names)
 
-def run_crawler(account_id):
+def update_summoner(account_id, region='jp1'):
   crawler = Crawler()
   crawler.update_summoner_by_id(account_id)
+
+def run_crawler(account_id):
   try:
     game_ids = crawler.list_gameids_by_account_id(account_id, end_index=100)
     for game_id in game_ids:

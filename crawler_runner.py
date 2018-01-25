@@ -7,8 +7,6 @@ django.setup()
 from pb_analyzer.crawler import Crawler
 from pb_analyzer.analyzer import Analyzer
 
-# ororog: 200482207
-
 def main():
   crawler = Crawler()
   analyzer = Analyzer()
