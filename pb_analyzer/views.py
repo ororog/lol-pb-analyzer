@@ -81,5 +81,5 @@ def crawl_match_by_game_id(game_id):
   analyzer = Analyzer()
   if not Match.objects.filter(game_id=game_id).first():
     crawler.crawl_match_by_game_id(game_id)
-    time.sleep(1)
+    time.sleep(settings.SLEEP_TIME_AFTER_CRAWLING)
   analyzer.analyze_match_by_game_id(game_id)

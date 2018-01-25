@@ -119,5 +119,4 @@ class Analyzer:
         lane_data['win'] += data['lane'][lane_key]['win']
         lane_data['lose'] += data['lane'][lane_key]['lose']
         lane_data['games'] += data['lane'][lane_key]['games']
-
     return res

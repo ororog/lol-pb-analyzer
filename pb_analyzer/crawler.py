@@ -8,9 +8,6 @@ from pb_analyzer.watcher import Watcher
 from pb_analyzer.analyzer import Analyzer
 from django.db import transaction
 
-
-# ororog: 200482207
-
 class Crawler:
   def __init__(self):
     self.__watcher = Watcher()
