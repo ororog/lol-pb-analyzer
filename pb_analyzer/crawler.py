@@ -16,12 +16,19 @@ class Crawler:
     if not Summoner.objects.filter(name=summoner_name).first():
       try:
         summoner_json = self.__watcher.summoner.by_name(region, summoner_name)
-
-        return Summoner.objects.create(
-          name=summoner_json['name'],
-          account_id=summoner_json['accountId'],
-          summoner_level=summoner_json['summonerLevel'],
-        )
+        account_id = summoner_json['accountId'],
+        summoner = Summoner.objects.filter(account_id=account_id).first()
+        if not summoner:
+          return Summoner.objects.create(
+            name=summoner_json['name'],
+            account_id=summoner_json['accountId'],
+            summoner_level=summoner_json['summonerLevel'],
+          )
+        else:
+          summoner.summoner_name = summoner_json['name']
+          summoner.summoner_level=summoner_json['summonerLevel']
+          summoner.save()
+          return summoner
       except requests.exceptions.HTTPError:
         return None
 
