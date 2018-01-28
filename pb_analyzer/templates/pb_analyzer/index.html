@@ -4,32 +4,36 @@
   <div class="container">
     <form action="." method="POST">{% csrf_token %}
       <div>
-        サモナーネームを入力してください<br>
-        <input name="summoner_names">
-        <input type="submit">
-      </div>
-
-      <div>
-        <h2>使い方</h2>
-        <a href="http://lns-lol.com/">LNS</a>でのピック/バンを効果的に行うためのツールです。
-        <ol>
-          <li>相手チームもしくは自分のチームのサモナーネームを入力します。カンマ区切りで複数のサモナーを同時に入力するとチーム全員のデータが見れます。</li>
-          <ul>
-            <li>(例) <a href="/summoners/おろろぐ,ukitu">おろろぐ,ukitu</a></li>
-          </ul>
-          <li>移動後のページで自分のページを表示して、更新ボタンを押します。</li>
-          <ul>
-            <li><img src="{% static 'images/example.png' %}"</li>
-          </ul>
-          <li>直近100試合を取得、解析します。キューが消化されるまでしばらく待ちます。</li>
-        </ol>
-        <h2>補足</h2>
-        <ul>
-          <li>試合は約1秒で1試合取得、解析できます。</li>
-          <li>解析対象の試合はノーマル、ランク、フレックスです。</li>
-          <li>APIの制限により、キューの消化が止まることがあります。しばらくお待ちください。</li>
-        </ul>
+        <div class="form-group">
+          <label for="summoner_names">サモナーネームを入力してください</label>
+          <input type="text" class="form-control" placeholder="サモナー１,サモナー２"
+                 id="summoner_names" name="summoner_names">
+        </div>
+        <div>
+          <button class="btn btn-primary" type="submit">分析画面を表示する</button>
+        </div>
       </div>
     </form>
+    <div>
+      <h2>使い方</h2>
+      <a href="http://lns-lol.com/">LNS</a>でのピック/バンを効果的に行うためのツールです。
+      <ol>
+        <li>相手チームもしくは自分のチームのサモナーネームを入力します。カンマ区切りで複数のサモナーを同時に入力するとチーム全員のデータが見れます。</li>
+        <ul>
+          <li>(例) <a href="/summoners/おろろぐ,ukitu">おろろぐ,ukitu</a></li>
+        </ul>
+        <li>移動後のページで自分のページを表示して、更新ボタンを押します。</li>
+        <ul>
+          <li><img src="{% static 'images/example.png' %}"</li>
+        </ul>
+        <li>直近100試合を取得、解析します。キューが消化されるまでしばらく待ちます。</li>
+      </ol>
+      <h2>補足</h2>
+      <ul>
+        <li>試合は約1秒で1試合取得、解析できます。</li>
+        <li>解析対象の試合はノーマル、ランク、フレックスです。</li>
+        <li>APIの制限により、キューの消化が止まることがあります。しばらくお待ちください。</li>
+      </ul>
+    </div>
   </div>
 {% endblock %}

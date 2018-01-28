@@ -72,6 +72,7 @@ def update_summoner(account_id, region='jp1'):
   crawler.update_summoner_by_id(account_id)
 
 def run_crawler(account_id):
+  crawler = Crawler()
   try:
     game_ids = crawler.list_gameids_by_account_id(account_id, end_index=100)
     for game_id in game_ids:

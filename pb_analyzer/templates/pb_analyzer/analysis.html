@@ -35,7 +35,7 @@
           <form action="." method="POST">{% csrf_token %}
             <input type="hidden" name="action" value="update">
             <input type="hidden" name="account_id" value="{{ result.summoner.account_id }}">
-            <input type="submit" value="更新する">
+            <button type="submit" class="btn btn-primary">更新する</button>
           </form>
           <div>
             <h3>レーン別勝率</h3>
