@@ -35,7 +35,11 @@
           <form action="." method="POST">{% csrf_token %}
             <input type="hidden" name="action" value="update">
             <input type="hidden" name="account_id" value="{{ result.summoner.account_id }}">
-            <button type="submit" class="btn btn-primary">更新する</button>
+            <button type="submit" disabled="{{ result.update_disabled }}"
+                    class="btn btn-primary">更新する</button>
+            {% if result.update_disabled %}
+              <span>更新は１時間に一回実行できます。</span>
+            {% endif %}
           </form>
           <div>
             <h3>レーン別勝率</h3>

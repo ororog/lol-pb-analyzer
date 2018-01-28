@@ -1,7 +1,9 @@
 import os
 import time
+import datetime
 import re
 import requests
+import pytz
 
 from pb_analyzer.models import *
 from pb_analyzer.watcher import Watcher
@@ -34,6 +36,10 @@ class Crawler:
 
   def update_summoner_by_id(self, account_id, region='jp1'):
     summoner = Summoner.objects.filter(account_id=account_id).first()
+    now = datetime.datetime.now(datetime.timezone.utc)
+    if (summoner.updated_at is not None and
+        now - datetime.timedelta(hours=1) < summoner.updated_at):
+      return
     summoner_json = self.__watcher.summoner.by_account(region, account_id)
     summoner_id = summoner_json['id']
     summoner_leagues_json = self.__watcher.league.positions_by_summoner(region, summoner_id)

@@ -1,5 +1,7 @@
 import time
+import datetime
 import urllib
+import pytz
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import redirect
@@ -27,7 +29,7 @@ def index(request):
         try:
           summoner = crawler.crawl_summoner_by_name(summoner_name)
           if not summoner:
-            return HttpResponse('Summnoer "{}" is not found.'.format(summoner_name), context)
+           return HttpResponse('Summnoer "{}" is not found.'.format(summoner_name), context)
         except:
           import traceback
           traceback.print_exc()
@@ -45,11 +47,16 @@ def analyze(request, names):
 
   analyzer = Analyzer()
   results = []
+  now = datetime.datetime.now(datetime.timezone.utc)
   for summoner in summoners:
     data = analyzer.analyze_summoner(summoner)
+    update_disabled = 'false' if (
+      summoner.updated_at is None or
+      now - datetime.timedelta(hours=1) > summoner.updated_at) else 'true'
     results.append({
       'summoner': summoner,
       'result' : data,
+      'update_disabled': update_disabled
     })
 
   team_result = analyzer.merge_result([result['result'] for result in results])
