@@ -7,6 +7,7 @@ class Summoner(models.Model):
   name = models.CharField(max_length=100)
   account_id = models.BigIntegerField()
   summoner_level = models.BigIntegerField(null=True)
+  updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
   tier = models.CharField(null=True, max_length=20)
   rank = models.CharField(null=True, max_length=20)
 
