@@ -37,9 +37,11 @@ class Crawler:
   def update_summoner_by_id(self, account_id, region='jp1'):
     summoner = Summoner.objects.filter(account_id=account_id).first()
     now = datetime.datetime.now(datetime.timezone.utc)
-    if (summoner.updated_at is not None and
-        now - datetime.timedelta(hours=1) < summoner.updated_at):
+    if not summoner.is_update_enabled():
       return
+    JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')
+    now = datetime.datetime.now(JST)
+    summoner.updated_at = now
     summoner_json = self.__watcher.summoner.by_account(region, account_id)
     summoner_id = summoner_json['id']
     summoner_leagues_json = self.__watcher.league.positions_by_summoner(region, summoner_id)
@@ -66,7 +68,6 @@ class Crawler:
     matchlist = self.__watcher.match.matchlist_by_account(
       region, account_id, begin_index=begin_index, end_index=end_index,
       season=season, queue=queue)
-    print(matchlist)
     return [match_ref['gameId'] for match_ref in matchlist['matches']]
 
   def crawl_match_by_id(self,

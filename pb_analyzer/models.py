@@ -1,3 +1,5 @@
+import datetime
+import pytz
 from django.db import models
 
 class Summoner(models.Model):
@@ -7,9 +9,16 @@ class Summoner(models.Model):
   name = models.CharField(max_length=100)
   account_id = models.BigIntegerField()
   summoner_level = models.BigIntegerField(null=True)
-  updated_at = models.DateTimeField(auto_now=True, blank=True, null=True)
+  updated_at = models.DateTimeField(blank=True, null=True)
   tier = models.CharField(null=True, max_length=20)
   rank = models.CharField(null=True, max_length=20)
+
+  def is_update_enabled(self):
+    JST = datetime.timezone(datetime.timedelta(hours=+9), 'JST')
+    now = datetime.datetime.now(JST)
+    return (
+      self.updated_at is None or
+      now - datetime.timedelta(hours=1) > self.updated_at)
 
 class Match(models.Model):
   def __str__(self):

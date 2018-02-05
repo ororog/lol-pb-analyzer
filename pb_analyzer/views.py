@@ -1,7 +1,5 @@
 import time
-import datetime
 import urllib
-import pytz
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import redirect
@@ -47,12 +45,9 @@ def analyze(request, names):
 
   analyzer = Analyzer()
   results = []
-  now = datetime.datetime.now(datetime.timezone.utc)
   for summoner in summoners:
     data = analyzer.analyze_summoner(summoner)
-    update_disabled = 'false' if (
-      summoner.updated_at is None or
-      now - datetime.timedelta(hours=1) > summoner.updated_at) else 'true'
+    update_disabled = '' if summoner.is_update_enabled() else 'disabled'
     results.append({
       'summoner': summoner,
       'result' : data,
@@ -62,15 +57,21 @@ def analyze(request, names):
   team_result = analyzer.merge_result([result['result'] for result in results])
 
   if request.method == 'GET':
+    ids = ','.join(str(summoner.account_id) for summoner in summoners)
     return render(request, 'pb_analyzer/analysis.html', {
       'queue_count': Task.objects.all().count(),
       'team_result': team_result,
-      'results': results
+      'results': results,
+      'ids': ids,
     })
   elif request.method == 'POST':
-    account_id = request.POST['account_id']
-    update_summoner(account_id)
-    run_crawler(account_id)
+    account_ids = request.POST['account_ids'].split(',')
+    for account_id in account_ids:
+      summoner = Summoner.objects.filter(account_id=account_id).first()
+      if not summoner.is_update_enabled():
+        continue;
+      update_summoner(account_id)
+      run_crawler(account_id)
     context = RequestContext(request, {})
     return redirect('analyze', names)
 
