@@ -29,6 +29,32 @@
           <h3>チャンピオン勝率</h3>
           {% include 'pb_analyzer/_champions_table.html' with champions_data=team_result.champions %}
         </div>
+        <div>
+          <h3>レーン別チャンピオン勝率</h3>
+          <ul class="nav nav-tabs" style="margin-bottom: 10px;">
+          {% for lane, lane_data in team_result.champions_by_lane.items %}
+            {% if lane == 'TOP' %}
+              <li class="active">
+            {% else %}
+              <li>
+            {% endif %}
+              <a data-toggle="tab" href="#lane_{{ lane }}">{{ lane }}</a>
+            </li>
+          {% endfor %}
+          </ul>
+          <div class="tab-content">
+          {% for lane, lane_data in team_result.champions_by_lane.items %}
+            {% if lane == 'TOP' %}
+            <div id="lane_{{ lane }}" class="tab-pane fade in active">
+            {% else %}
+            <div id="lane_{{ lane }}" class="tab-pane fade in">
+            {% endif %}
+              {% include 'pb_analyzer/_champions_table.html' with champions_data=lane_data %}
+            </div>
+
+          {% endfor %}
+          </div>
+        </div>
       </div>
       {% for result in results %}
         <div id="{{ result.summoner.account_id }}" class="tab-pane fade">

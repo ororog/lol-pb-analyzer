@@ -61,11 +61,11 @@ class Analyzer:
         'DUO_SUPPORT': {'win': 0, 'lose': 0, 'games': 0},
       },
       'champions_by_lane': {
-        'TOP': {'champions': {}},
-        'JUNGLE': {'champions': {}},
-        'MIDDLE': {'champions': {}},
-        'DUO_CARRY': {'champions': {}},
-        'DUO_SUPPORT': {'champions': {}},
+        'TOP': {},
+        'JUNGLE': {},
+        'MIDDLE': {},
+        'DUO_CARRY': {},
+        'DUO_SUPPORT': {},
       },
       'total_games': 0,
     }
@@ -83,9 +83,15 @@ class Analyzer:
       if lane == 'BOTTOM':
         lane = match_result.timeline.role
 
-      if lane in result['lane']:
-        result['lane'][lane][win_lose] += 1
-        result['lane'][lane]['games'] += 1
+      if not lane in result['lane']:
+        continue
+      result['lane'][lane][win_lose] += 1
+      result['lane'][lane]['games'] += 1
+
+      if not champion_id in result['champions_by_lane'][lane]:
+        result['champions_by_lane'][lane][champion_id] = {'win': 0, 'lose': 0, 'games': 0}
+      result['champions_by_lane'][lane][champion_id][win_lose] += 1
+      result['champions_by_lane'][lane][champion_id]['games'] += 1
     return result
 
   def merge_result(self, results):
@@ -99,11 +105,11 @@ class Analyzer:
         'DUO_SUPPORT': {'win': 0, 'lose': 0, 'games': 0},
       },
       'champions_by_lane': {
-        'TOP': {'champions': {}},
-        'JUNGLE': {'champions': {}},
-        'MIDDLE': {'champions': {}},
-        'DUO_CARRY': {'champions': {}},
-        'DUO_SUPPORT': {'champions': {}},
+        'TOP': {},
+        'JUNGLE': {},
+        'MIDDLE': {},
+        'DUO_CARRY': {},
+        'DUO_SUPPORT': {},
       },
       'total_games': 0,
     }
@@ -119,4 +125,14 @@ class Analyzer:
         lane_data['win'] += data['lane'][lane_key]['win']
         lane_data['lose'] += data['lane'][lane_key]['lose']
         lane_data['games'] += data['lane'][lane_key]['games']
+
+      for lane, lane_data in data['champions_by_lane'].items():
+        for champion_id, champ_data in lane_data.items():
+          if not champion_id in res['champions_by_lane'][lane]:
+            res['champions_by_lane'][lane][champion_id] = {
+              'win': 0, 'lose': 0, 'games': 0
+            }
+          res['champions_by_lane'][lane][champion_id]['win'] += champ_data['win']
+          res['champions_by_lane'][lane][champion_id]['lose'] += champ_data['lose']
+          res['champions_by_lane'][lane][champion_id]['games'] += champ_data['games']
     return res
