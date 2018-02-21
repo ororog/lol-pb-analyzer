@@ -49,9 +49,8 @@
             {% else %}
             <div id="lane_{{ lane }}" class="tab-pane fade in">
             {% endif %}
-              {% include 'pb_analyzer/_champions_table.html' with champions_data=lane_data %}
+              {% include 'pb_analyzer/_champions_table.html' with champions_data=lane_data page_length=5 %}
             </div>
-
           {% endfor %}
           </div>
         </div>

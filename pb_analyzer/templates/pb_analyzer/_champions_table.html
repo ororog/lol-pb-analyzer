@@ -1,5 +1,6 @@
 {% load filter %}
-<table class="table table-striped table-condensed champions-table">
+<table class="table table-striped table-condensed champions-table"
+       data-page-length="{% firstof page_length 10 %}">
   <thead class="thead-inverse">
     <tr>
       <th>チャンピオン</th>
