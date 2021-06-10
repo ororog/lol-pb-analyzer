@@ -1,6 +1,6 @@
 certifi==2018.1.18
 chardet==3.0.4
-Django==2.0.1
+Django==2.2.24
 django-background-tasks==1.1.13
 django-compat==1.0.15
 idna==2.6
